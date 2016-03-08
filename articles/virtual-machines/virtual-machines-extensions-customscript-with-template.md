@@ -29,23 +29,23 @@ Ever since its launch, Custom Script extension has been used widely to configure
 
 ## About Azure Resource manager templates
 
-Azure Resource Manager template allow you to declaratively specify the Azure IaaS infrastructure in Json language by defining the dependencies between resources. For a detailed overview of Azure Resource Manager templates, see the following articles:
+Azure Resource Manager template allows you to declaratively specify the Azure IaaS infrastructure in JSON language by defining the dependencies between resources. For a detailed overview of Azure Resource Manager templates, see the following articles:
 
 - [Resource Group Overview](../resource-group-overview)
 - [Deploying Templates with Azure CLI](virtual-machines-deploy-rmtemplates-azure-cli)
-- [Deploying Templates with Azure Powershell](virtual-machines-deploy-rmtemplates-powershell)
+- [Deploying Templates with Azure PowerShell](virtual-machines-deploy-rmtemplates-powershell)
 
-### Prerequistes
+### Prerequisites
 
-1. Install the latest Azure PowerShell Cmdlets or Azure CLI from [here](https://azure.microsoft.com/downloads/).
+1. Install the latest Azure PowerShell cmdlets or Azure CLI from [here](https://azure.microsoft.com/downloads/).
 2. If the scripts will be run on an existing VM, make sure VM Agent is enabled on the VM, if not follow [this](virtual-machines-extensions-install) to install one.
 3. Upload the scripts that you want to run on the VM to Azure Storage. The scripts can come from a single or multiple storage containers.
-4. Alternatively the scripts can also be uploaded to a Github account.
+4. Alternatively the scripts can also be uploaded to a GitHub account.
 5. The script should be authored in such a way that the entry script which is launched by the extension in turn launches other scripts.
 
-## Using the custom script extension
+## Using the Custom Script extension
 
-For deploying with templates we use the same version of  Custom Script extension thats availale for Azure Service Management APIs. The extension supports the same parameters and scenarios like uploading files to Azure Storage account or Github location. The key difference while using with templates is the exact version of the extension should be specified, as opposed to specifying the version in majorversion.* format.
+For deploying with templates we use the same version of  Custom Script extension that's available for Azure Service Management APIs. The extension supports the same parameters and scenarios like uploading files to Azure Storage account or GitHub location. The key difference while using with templates is the exact version of the extension should be specified, as opposed to specifying the version in majorversion.* format.
 
  ## Template example for a Linux VM
 
@@ -96,7 +96,7 @@ Define the following resource in the Resource section of the template
 
 In the examples above, replace the file URL and the file name with your own settings.
 
-After authoring the template, you cna deploy them using Azure CLI or Azure Powershell.
+After authoring the template, you can deploy them using Azure CLI or Azure PowerShell.
 
 Please refer to the examples below for complete samples of configuring applications on a VM using Custom Script extension.
 
