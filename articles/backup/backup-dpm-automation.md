@@ -41,14 +41,8 @@ Sample DPM scripts: Get-DPMSampleScript
 ```
 
 ## Setup and Registration
-To begin:
 
-1. [Download latest PowerShell](https://github.com/Azure/azure-powershell/releases) (minimum version required is : 1.0.0)
-2. Enable the Azure Backup commandlets by switching to *AzureResourceManager* mode by using the **Switch-AzureMode** commandlet:
-
-```
-PS C:\> Switch-AzureMode AzureResourceManager
-```
+ [Download latest Azure PowerShell](https://github.com/Azure/azure-powershell/releases) (minimum version required is : 1.0.0)
 
 The following setup and registration tasks can be automated with PowerShell:
 
@@ -62,14 +56,14 @@ The following setup and registration tasks can be automated with PowerShell:
 
 > [AZURE.WARNING] For customers using Azure Backup for the first time, you need to register the Azure Backup provider to be used with your subscription. This can be done by running the following command: Register-AzureProvider -ProviderNamespace "Microsoft.Backup"
 
-You can create a new backup vault using the **New-AzureRMBackupVault** commandlet. The backup vault is an ARM resource, so you need to place it within a Resource Group. In an elevated Azure PowerShell console, run the following commands:
+You can create a new backup vault using the **New-AzureRmBackupVault** cmdlet. The backup vault is a Resource Manager resource, so you need to place it within a resource group. In an elevated Windows PowerShell console, run the following commands:
 
 ```
-PS C:\> New-AzureResourceGroup –Name “test-rg” -Region “West US”
-PS C:\> $backupvault = New-AzureRMBackupVault –ResourceGroupName “test-rg” –Name “test-vault” –Region “West US” –Storage GRS
+PS C:\> New-AzureRmResourceGroup –Name “test-rg” -Region “West US”
+PS C:\> $backupvault = New-AzureRmBackupVault –ResourceGroupName “test-rg” –Name “test-vault” –Region “West US” –Storage GRS
 ```
 
-You can get a list of all the backup vaults in a given subscription using the **Get-AzureRMBackupVault** commandlet.
+You can get a list of all the backup vaults in a given subscription using the **Get-AzureRmBackupVault** cmdlet.
 
 
 ### Installing the Azure Backup agent on a DPM Server
@@ -115,11 +109,11 @@ Before you can register with the Azure Backup service, you need to ensure that t
 - Have a valid Azure subscription
 - Have a backup vault
 
-To download the vault credentials, run the **Get-AzureBackupVaultCredentials** commandlet in an Azure PowerShell console and store it in a convenient location like *C:\Downloads\*.
+To download the vault credentials, run the **Get-AzureRmBackupVaultCredentials** cmdlet in an Windows PowerShell console and store it in a convenient location like *C:\Downloads\*.
 
 ```
 PS C:\> $credspath = "C:\"
-PS C:\> $credsfilename = Get-AzureRMBackupVaultCredentials -Vault $backupvault -TargetLocation $credspath
+PS C:\> $credsfilename = Get-AzureRmBackupVaultCredentials -Vault $backupvault -TargetLocation $credspath
 PS C:\> $credsfilename
 f5303a0b-fae4-4cdb-b44d-0e4c032dde26_backuprg_backuprn_2015-08-11--06-22-35.VaultCredentials
 ```
@@ -149,7 +143,7 @@ PS C:\> Set-DPMCloudSubscriptionSetting -DPMServerName "TestingServer" -Subscrip
 ```
 
 ### Networking
-If the connectivity of the DPM machine to the Azure Backup service on the internet is through a proxy server, then the proxy server settings should be provided for backups to succeed. This is done by using the ```-ProxyServer```, ```-ProxyPort```, ```-ProxyUsername``` and the ```ProxyPassword``` parameters with the [Set-DPMCloudSubscriptionSetting](https://technet.microsoft.com/library/jj612791) cmdlet. In this example, there is no proxy server so we are explicitly clearing any proxy-related information.
+If the connectivity of the DPM machine to the Azure Backup service on the internet is through a proxy server, then the proxy server settings should be provided for backups to succeed. This is done by using the ```-ProxyServer```, ```-ProxyPort```, ```-ProxyUsername```, and the ```-ProxyPassword``` parameters with the [Set-DPMCloudSubscriptionSetting](https://technet.microsoft.com/library/jj612791) cmdlet. In this example, there is no proxy server so we are explicitly clearing any proxy-related information.
 
 ```
 PS C:\> Set-DPMCloudSubscriptionSetting -DPMServerName "TestingServer" -SubscriptionSetting $setting -NoProxy
@@ -177,7 +171,7 @@ The backup data sent to Azure Backup is encrypted to protect the confidentiality
 In the example below, the first command converts the string ```passphrase123456789``` to a secure string and assigns the secure string to the variable named ```$Passphrase```. the second command sets the secure string in ```$Passphrase``` as the password for encrypting backups.
 
 ```
-PS C:\> $Passphrase = ConvertTo-SecureString -string "passphrase123456789" -AsPlainText -Force
+PS C:\> $Passphrase = ConvertTo-SecureString -String "passphrase123456789" -AsPlainText -Force
 
 PS C:\> Set-DPMCloudSubscriptionSetting -DPMServerName "TestingServer" -SubscriptionSetting $setting -EncryptionPassphrase $Passphrase
 ```
@@ -202,7 +196,7 @@ In this section, you will add a production server to DPM and then protect the da
 Start by creating a new Protection Group using the [New-DPMProtectionGroup](https://technet.microsoft.com/library/hh881722) cmdlet.
 
 ```
-PS C:\> $PG = New-DPMProtectionGroup -DPMServerName " TestingServer " -Name "ProtectGroup01"
+PS C:\> $PG = New-DPMProtectionGroup -DPMServerName "TestingServer" -Name "ProtectGroup01"
 ```
 
 The above cmdlet will create a Protection Group named *ProtectGroup01*. An existing protection group can also be modified later to add backup to the Azure cloud. However, to make any changes to the Protection Group - new or existing - we need to get a handle on a *modifiable* object using the [Get-DPMModifiableProtectionGroup](https://technet.microsoft.com/library/hh881713) cmdlet.
@@ -222,7 +216,7 @@ Each DPM Agent knows the list of datasources on the server that it is installed 
 The list of servers on which the DPM Agent is installed and is being managed by the DPM Server is acquired with the [Get-DPMProductionServer](https://technet.microsoft.com/library/hh881600) cmdlet. In this example we will filter and only configure PS with name *productionserver01* for backup.
 
 ```
-PS C:\> $server = Get-ProductionServer -DPMServerName "TestingServer" | where {($_.servername) –contains “productionserver01”
+PS C:\> $server = Get-ProductionServer -DPMServerName "TestingServer" | where {$_.servername –contains “productionserver01”}
 ```
 
 Now fetch the list of datasources on ```$server``` using the [Get-DPMDatasource](https://technet.microsoft.com/library/hh881605) cmdlet. In this example we are filtering for the volume *D:\* which we want to configure for backup. This datasource is then added to the Protection Group using the [Add-DPMChildDatasource](https://technet.microsoft.com/library/hh881732) cmdlet. Remember to use the *modifable* protection group object ```$MPG``` to make the additions.
@@ -246,7 +240,7 @@ PS C:\> Add-DPMChildDatasource -ProtectionGroup $MPG -ChildDatasource $DS –Onl
 ### Setting the retention range
 Set the retention for the backup points using the [Set-DPMPolicyObjective](https://technet.microsoft.com/library/hh881762) cmdlet. While it might seem odd to set the retention before the backup schedule has been defined, using the ```Set-DPMPolicyObjective``` cmdlet automatically sets a default backup schedule that can then be modified. It is always possible to set the backup schedule first and the retention policy after.
 
-In the example below, the cmdlet sets the retention parameters for disk backups. This will retain backups for 10 days, and sync data every 6 hours between the production server and the DPM server. The ```SynchronizationFrequencyMinutes``` doesn't define how often a backup point is created, but how often data is copied to the DPM server; this prevents backups from becoming too large.
+In the example below, the cmdlet sets the retention parameters for disk backups. This will retain backups for 10 days, and sync data every 6 hours between the production server and the DPM server. The ```-SynchronizationFrequencyMinutes``` doesn't define how often a backup point is created, but how often data is copied to the DPM server; this prevents backups from becoming too large.
 
 ```
 PS C:\> Set-DPMPolicyObjective –ProtectionGroup $MPG -RetentionRangeInDays 10 -SynchronizationFrequencyMinutes 360
