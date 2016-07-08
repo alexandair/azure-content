@@ -53,7 +53,7 @@ You can also obtain more information about the installation process by reading t
 
 [AZURE.NOTE] If the Azure Security Center Agent is misbehaving, you will need to restart the target VM since there is no command to stop and start the agent.
 
-## Troubleshooting Monitoring Agent Installation in Windows
+## Troubleshooting Monitoring Agent Installation in Linux
 When troubleshooting VM Agent installation in a Linux system you should ensure that the extension was downloaded to /var/lib/waagent/. You can run the command below to verify if it was installed:
 
 `cat /var/log/waagent.log` 
